@@ -1,0 +1,5 @@
+language: OpenSCAD
+
+install: true 
+
+script: true
