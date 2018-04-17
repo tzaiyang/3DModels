@@ -1,5 +1,5 @@
 //PCB parameter
-Shell_Thickness=2.0;
+Shell_Thickness=1.0;
 PCB_Length=72.5;
 PCB_Width=56;
 PCB_Thickness=0;
@@ -10,7 +10,7 @@ Battery_Thickness=0;
 
 Corner_Length=6;
 Spiral_Hole_Radius=1.5;
-Spiral_Hole_cap_Radius=2.6;
+Spiral_Hole_cap_Radius=2.5;
 Spiral_Hole_cap_Height=2.0;
 
 Cooling_layer_Thickness=3.0;
@@ -33,7 +33,7 @@ drill_gap_x=(Cube_Length-2*drill_start_x)/drill_num_x;
 drill_gap_y=(Cube_Width-2*drill_start_y)/drill_num_y;
 
 //resolution ratio
-resolution=25;
+resolution=30;
 
 //cover
 difference(){
@@ -60,8 +60,8 @@ difference(){
     translate([Shell_Thickness,Corner_Length,Shell_Thickness])
     cube([Cube_Length-2*Shell_Thickness,Cube_Width-2*Corner_Length,Cube_Height-Shell_Thickness]);
 
-    translate([Cube_A_Edge_Shell_Thickness,Corner_Length,Cube_Height-Cube_A_Edge_Shell_Height])
-    cube([Cube_Length-2*Cube_A_Edge_Shell_Thickness,Cube_Width-2*(Corner_Length),Cube_Height-Shell_Thickness]); 
+/*    translate([Cube_A_Edge_Shell_Thickness,Corner_Length,Cube_Height-Cube_A_Edge_Shell_Height])
+    cube([Cube_Length-2*Cube_A_Edge_Shell_Thickness,Cube_Width-2*(Corner_Length),Cube_Height-Shell_Thickness]); */
 }
 
 module drill(move_x,move_y,gap_x,gap_y,number,num_y)
