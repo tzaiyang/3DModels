@@ -1,5 +1,5 @@
 //PCB parameter
-Shell_Thickness=1.0;
+Shell_Thickness=1.5;
 PCB_Length=72.5;
 PCB_Width=56;
 PCB_Thickness=0;
