@@ -2,7 +2,7 @@ USB_L = 12.5;
 USB_W = 4.8;
 USB_H = 14;
 
-USB_WW = 5;
+USB_WW = 10;
 USB_LL = 6;
 USB_EDGE = 3;
 
