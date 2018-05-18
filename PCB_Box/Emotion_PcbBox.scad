@@ -37,35 +37,15 @@ drill_gap_y=(Cube_Width-2*drill_start_y)/drill_num_y;
 //margin
 margin_offset=0.5;
 //resolution ratio
-resolution=30;
+resolution=3;
 
-module CoverAllCubeBody(Cube_Length,Cube_Width,Cube_Height,Corner_Length){
+module AllCubeBody(Cube_Length,Cube_Width,Cube_Height,Corner_Length){
     difference(){
     //all cube
     cube([Cube_Length,Cube_Width,Cube_Height]);
-    //drill origin
-    drill_Spiral_Hole(Corner_Length/2,Corner_Length/2,0+2*Shell_Thickness,Cube_Height-2*Shell_Thickness);
-    //drill left of top
-    drill_Spiral_Hole(Corner_Length/2,Cube_Width-(Corner_Length/2),2*Shell_Thickness,Cube_Height-2*Shell_Thickness);
-    //drill right of top
-    drill_Spiral_Hole(Cube_Length-(Corner_Length/2),Cube_Width-(Corner_Length/2),2*Shell_Thickness,Cube_Height-2*Shell_Thickness);
-    //drill right of bottom
-    drill_Spiral_Hole(Cube_Length-(Corner_Length/2),Corner_Length/2,2*Shell_Thickness,Cube_Height-2*Shell_Thickness);
-    }
-}
-
-module BottomAllCubeBody(Cube_Length,Cube_Width,Cube_Height,Corner_Length){
-    difference(){
-    //all cube
-    cube([Cube_Length,Cube_Width,Cube_Height]);
-    //drill origin
-    drill_Spiral_Hole(Corner_Length/2,Corner_Length/2,0,Cube_Height);
-    //drill left of top
-    drill_Spiral_Hole(Corner_Length/2,Cube_Width-(Corner_Length/2),0,Cube_Height);
-    //drill right of top
-    drill_Spiral_Hole(Cube_Length-(Corner_Length/2),Cube_Width-(Corner_Length/2),0,Cube_Height);
-    //drill right of bottom
-    drill_Spiral_Hole(Cube_Length-(Corner_Length/2),Corner_Length/2,0,Cube_Height);
+    Spiral_Hole(Cube_Height);
+    ThermalVia(Cube_Height);
+    DifCube(Cube_Length,Cube_Width,Cube_Height,Corner_Length,Shell_Thickness);
     }
 }
 
@@ -82,20 +62,37 @@ module ThermalVia(Cube_Height){
     drill(drill_start_x,drill_start_x,drill_gap_x,drill_gap_y,z,drill_num_y,Cube_Height);
     }
 }
-module drill(move_x,move_y,gap_x,gap_y,number,num_y,Cube_Height)
-{
+module drill(move_x,move_y,gap_x,gap_y,number,num_y,Cube_Height){
     for(z=[0:num_y]){
     translate([move_x+number*gap_x,move_y+z*gap_y,0])
     cylinder(h=Cube_Height,r=drill_Radius,$fn=resolution);
     }
 }
-module drill_Spiral_Hole(pos_x,pos_y,pos_z,Cube_Height){
+module drill_Spiral_Hole(pos_x,pos_y,Cube_Height){
             //resolution
             $fn=resolution;
-            translate([pos_x,pos_y,pos_z])
-            cylinder(h=Cube_Height,r=Spiral_Hole_Radius);
-            translate([pos_x,pos_y,pos_z])
+            translate([pos_x,pos_y,Spiral_Hole_cap_Height])
+            cylinder(h=Cube_Height-Spiral_Hole_cap_Height,r=Spiral_Hole_Radius);
+}
+module Spiral_Hole(Cube_Height){
+    //drill origin
+    drill_Spiral_Hole(Corner_Length/2,Corner_Length/2,Cube_Height);
+    //drill left of top
+    drill_Spiral_Hole(Corner_Length/2,Cube_Width-(Corner_Length/2),Cube_Height);
+    //drill right of top
+    drill_Spiral_Hole(Cube_Length-(Corner_Length/2),Cube_Width-(Corner_Length/2),Cube_Height);
+    //drill right of bottom
+    drill_Spiral_Hole(Cube_Length-(Corner_Length/2),Corner_Length/2,Cube_Height);
+}
+module drill_Spiral_Cap(pos_x,pos_y){
+            translate([pos_x,pos_y,0])
             cylinder(h=Spiral_Hole_cap_Height,r=Spiral_Hole_cap_Radius);
+}
+module Spiral_Cap(){
+    drill_Spiral_Cap(Corner_Length/2,Corner_Length/2);
+    drill_Spiral_Cap(Corner_Length/2,Cube_Width-(Corner_Length/2));
+    drill_Spiral_Cap(Cube_Length-(Corner_Length/2),Cube_Width-(Corner_Length/2));
+    drill_Spiral_Cap(Cube_Length-(Corner_Length/2),Corner_Length/2);
 }
 module connector_drill(connector_pos_x,connector_pos_y,connector_length,connector_height){
     translate([connector_pos_x,connector_pos_y,Cube_Height_cover-connector_height])
@@ -151,9 +148,8 @@ module  LeftEdge(){
 }
 module BoxBottom(Cube_Length,Cube_Width,Cube_Height){
 difference(){
-    BottomAllCubeBody(Cube_Length,Cube_Width,Cube_Height,Corner_Length);
-    ThermalVia(Cube_Height);
-    DifCube(Cube_Length,Cube_Width,Cube_Height,Corner_Length,Shell_Thickness);
+    AllCubeBody(Cube_Length,Cube_Width,Cube_Height,Corner_Length);
+    Spiral_Cap();
 }
 }
 module DifThick(Cube_Height){
@@ -166,10 +162,7 @@ module DifThick(Cube_Height){
 }
 module BoxCover(Cube_Length,Cube_Width,Cube_Height){
 difference(){
-    CoverAllCubeBody(Cube_Length,Cube_Width,Cube_Height,Corner_Length);
-    ThermalVia(Cube_Height);
-    DifCube(Cube_Length,Cube_Width,Cube_Height,Corner_Length,Shell_Thickness);
-    
+    AllCubeBody(Cube_Length,Cube_Width,Cube_Height,Corner_Length);
     TopEdge();
     //BottomEdge();
     LeftEdge();
@@ -177,6 +170,6 @@ difference(){
 }
 }
 
-//translate([0,-Cube_Width-10,0])
-//BoxBottom(Cube_Length,Cube_Width,Cube_Height_bottom);
+translate([0,-Cube_Width-10,0])
+BoxBottom(Cube_Length,Cube_Width,Cube_Height_bottom);
 BoxCover(Cube_Length,Cube_Width,Cube_Height_cover);
