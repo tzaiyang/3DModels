@@ -184,6 +184,6 @@ difference(){
 }
 }
 
-//translate([0,-Cube_Width-10,0])
-//BoxBottom(Cube_Length,Cube_Width,Cube_Height_bottom);
+translate([0,-Cube_Width-10,0])
+BoxBottom(Cube_Length,Cube_Width,Cube_Height_bottom);
 BoxCover(Cube_Length,Cube_Width,Cube_Height_cover);
